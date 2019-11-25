@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, ComponentFactoryResolver, OnDestroy, ViewContainerRef, ComponentRef } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, ComponentFactoryResolver, OnDestroy, ViewContainerRef, ComponentRef, destroyPlatform } from '@angular/core';
 
 import { AdDirective } from './ad.directive';
 import { AdItem }      from './ad-item';
@@ -11,7 +11,7 @@ import { AdComponent } from './ad.component';
                 <h3>Advertisements</h3>
                 <ng-template ad-host></ng-template>
 
-                <button (click)="getAds()">Add dynamic item</button> <button (click)="printDynamicValues()">Print Dynamic Values</button>
+                <button (click)="getAds()">Add dynamic item</button> <button (click)="printDynamicValues()">Print Dynamic Values</button><button (click)="destroy()">Destroy 1st item</button>
               </div>
             `
 })
@@ -27,7 +27,7 @@ export class AdBannerComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadComponent();
-    this.getAds();
+    //this.getAds();
   }
 
   ngOnDestroy() {
@@ -44,6 +44,7 @@ export class AdBannerComponent implements OnInit, OnDestroy {
     //viewContainerRef.clear();
 
     const componentRef = viewContainerRef.createComponent(componentFactory);
+  
     (<AdComponent>componentRef.instance).data = adItem.data;
 
     //debug
@@ -68,8 +69,16 @@ export class AdBannerComponent implements OnInit, OnDestroy {
         console.log(element.instance.data.inputVal);
       }
       
-  });
+    });
+  }
+
+
+  destroy(){
+    this.items[0].destroy();
+    this.items.splice(0,1);
+  };
+
 
     
-  }
+  
 }
